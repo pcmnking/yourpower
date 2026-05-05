@@ -78,6 +78,28 @@ const BRANCH_TO_STEM = {
     '午': '丁', '未': '己', '申': '庚', '酉': '辛', '戌': '戊', '亥': '壬'
 };
 
+// --- 地支藏干資料庫 ---
+const BRANCH_HIDE_GANS = {
+    '子': ['癸'], '丑': ['己', '癸', '辛'], '寅': ['甲', '丙', '戊'], '卯': ['乙'],
+    '辰': ['戊', '乙', '癸'], '巳': ['丙', '庚', '戊'], '午': ['丁', '己'], '未': ['己', '丁', '乙'],
+    '申': ['庚', '壬', '戊'], '酉': ['辛'], '戌': ['戊', '辛', '丁'], '亥': ['壬', '甲']
+};
+
+// --- 手動輸入 Mock Bazi 物件 ---
+function createManualBazi(y, m, d, h) {
+    return {
+        getYear: () => [y[0], y[1]],
+        getMonth: () => [m[0], m[1]],
+        getDay: () => [d[0], d[1]],
+        getHour: () => [h[0], h[1]],
+        getTime: () => [h[0], h[1]],
+        getYearHideGan: () => BRANCH_HIDE_GANS[y[1]] || [],
+        getMonthHideGan: () => BRANCH_HIDE_GANS[m[1]] || [],
+        getDayHideGan: () => BRANCH_HIDE_GANS[d[1]] || [],
+        getTimeHideGan: () => BRANCH_HIDE_GANS[h[1]] || []
+    };
+}
+
 // --- 行動能量資料庫 (由筆記整合) ---
 const ACTION_ENERGY_RULES = [
     { id: '食神剋官', n: '挑戰傳統型', d: '具備獨特視角，喜歡挑戰僵化制度。行動上需有專業實力支撐，否則易流於挑剔。', check: (g) => g.includes('食神') && (g.includes('正官') || g.includes('七殺')) },
@@ -135,7 +157,17 @@ function calculateByManual() {
         const m = document.getElementById('mStem').value + document.getElementById('mBranch').value;
         const d = document.getElementById('dStem').value + document.getElementById('dBranch').value;
         const h = document.getElementById('hStem').value + document.getElementById('hBranch').value;
-        currentBazi = EightChar.fromGanZhi(y, m, d, h);
+        
+        // 使用 Mock 物件替代 EightChar.fromGanZhi
+        currentBazi = createManualBazi(y, m, d, h);
+        
+        // 清除大運數據 (手動輸入無法計算大運)
+        currentDaYunList = [];
+        document.getElementById('dayunList').innerHTML = '<p style="font-size:0.8rem; color:var(--text-secondary); padding:10px;">手動輸入不支援大運計算</p>';
+        document.getElementById('liunianList').innerHTML = '';
+        document.getElementById('liuyueList').innerHTML = '';
+        document.getElementById('luckAnalysisResult').innerHTML = '<p style="text-align:center; padding:2rem; opacity:0.5;">請使用生辰輸入以查看完整運勢分析</p>';
+        
         displayResult(currentBazi);
     } catch (e) { alert("手動轉換失敗: " + e.message); }
 }
@@ -278,6 +310,11 @@ function selectLiuYue(index, mGan, mZhi) {
                     <p style="font-size: 0.9rem; color: var(--primary-gold); margin-bottom: 5px;"><strong>【大運週期】</strong></p>
                     <p style="font-size: 0.85rem;">天[${luckGods.dyS}]: ${LUCK_XIANG_YI[luckGods.dyS] || '穩定'}</p>
                     <p style="font-size: 0.85rem;">地[${luckGods.dyB}]: ${LUCK_XIANG_YI[luckGods.dyB] || '根基'}</p>
+                </div>
+                <div style="margin-bottom: 10px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px;">
+                    <p style="font-size: 0.9rem; color: var(--primary-gold); margin-bottom: 5px;"><strong>【流年重點】</strong></p>
+                    <p style="font-size: 0.85rem;">天[${luckGods.lnS}]: ${LUCK_XIANG_YI[luckGods.lnS] || '當前歲月'}</p>
+                    <p style="font-size: 0.85rem;">地[${luckGods.lnB}]: ${LUCK_XIANG_YI[luckGods.lnB] || '環境動盪'}</p>
                 </div>
                 <div>
                     <p style="font-size: 0.9rem; color: var(--primary-gold); margin-bottom: 5px;"><strong>【流月重點】</strong></p>
