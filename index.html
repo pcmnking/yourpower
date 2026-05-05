@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>玄奧八字 - 專業命理分析系統</title>
+    <title>沐辰八字解讀 - 專業命理分析系統</title>
     <meta name="description" content="基於專業演算法的八字命盤分析系統，提供精準的十神、藏干及五行分析。">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Ma+Shan+Zheng&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- Lunar-javascript & Chart.js CDN (Fixed Versions) -->
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript/lunar.min.js"></script>
     <script src="https://cdn.staticfile.org/Chart.js/3.9.1/chart.min.js"></script>
 </head>
+
 <body>
     <div class="container">
         <header>
-            <h1>玄奧八字解讀</h1>
+            <h1>沐辰八字解讀</h1>
             <p class="subtitle">探索天命之秘，洞察五行生克</p>
         </header>
 
@@ -117,7 +120,10 @@
             <div class="analysis-grid">
                 <div class="analysis-card">
                     <h2 class="card-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
                         命理詳細解讀
                     </h2>
                     <div id="interpretationContent" class="text-secondary">
@@ -130,7 +136,7 @@
                         <button class="card-tab active" onclick="switchCardTab('element')">五行強弱</button>
                         <button class="card-tab" onclick="switchCardTab('luck')">大運流年</button>
                     </div>
-                    
+
                     <div id="elementView">
                         <canvas id="elementChart"></canvas>
                     </div>
@@ -161,4 +167,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>
