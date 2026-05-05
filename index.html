@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>玄奧八字 - 專業命理分析系統</title>
+    <meta name="description" content="基於專業演算法的八字命盤分析系統，提供精準的十神、藏干及五行分析。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Lunar-javascript & Chart.js CDN (Fixed Versions) -->
+    <script src="https://cdn.jsdelivr.net/npm/lunar-javascript/lunar.min.js"></script>
+    <script src="https://cdn.staticfile.org/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>玄奧八字解讀</h1>
+            <p class="subtitle">探索天命之秘，洞察五行生克</p>
+        </header>
+
+        <section class="input-card">
+            <div class="input-tabs">
+                <button class="tab-btn active" onclick="switchInput('date')">生辰輸入</button>
+                <button class="tab-btn" onclick="switchInput('manual')">八字直入</button>
+            </div>
+
+            <div id="dateInput" class="input-grid">
+                <div class="form-group">
+                    <label for="birthDate">出生日期</label>
+                    <input type="date" id="birthDate" value="1975-09-02">
+                </div>
+                <div class="form-group">
+                    <label for="birthTime">出生時間</label>
+                    <input type="time" id="birthTime" value="16:30">
+                </div>
+                <div class="form-group">
+                    <label for="gender">性別</label>
+                    <select id="gender">
+                        <option value="1" selected>男</option>
+                        <option value="0">女</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="calculateByDate()">開始解讀</button>
+            </div>
+
+            <div id="manualInput" class="input-grid" style="display: none;">
+                <div class="form-group">
+                    <label>年柱 (天干/地支)</label>
+                    <div style="display:flex; gap:5px;">
+                        <select id="yStem" class="small-select"></select>
+                        <select id="yBranch" class="small-select"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>月柱</label>
+                    <div style="display:flex; gap:5px;">
+                        <select id="mStem" class="small-select"></select>
+                        <select id="mBranch" class="small-select"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>日柱</label>
+                    <div style="display:flex; gap:5px;">
+                        <select id="dStem" class="small-select"></select>
+                        <select id="dBranch" class="small-select"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>時柱</label>
+                    <div style="display:flex; gap:5px;">
+                        <select id="hStem" class="small-select"></select>
+                        <select id="hBranch" class="small-select"></select>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="calculateByManual()">生成解讀</button>
+            </div>
+        </section>
+
+        <main id="resultSection" style="display: none;">
+            <div class="bazi-chart">
+                <div class="pillar" id="yearPillar">
+                    <div class="pillar-label">年柱</div>
+                    <div class="ten-god" id="yearStemTenGod">-</div>
+                    <div class="character stem" id="yearStem">-</div>
+                    <div class="character branch" id="yearBranch">-</div>
+                    <div class="hidden-stems" id="yearHidden">-</div>
+                    <div class="ten-god" id="yearBranchTenGod">-</div>
+                </div>
+                <div class="pillar" id="monthPillar">
+                    <div class="pillar-label">月柱</div>
+                    <div class="ten-god" id="monthStemTenGod">-</div>
+                    <div class="character stem" id="monthStem">-</div>
+                    <div class="character branch" id="monthBranch">-</div>
+                    <div class="hidden-stems" id="monthHidden">-</div>
+                    <div class="ten-god" id="monthBranchTenGod">-</div>
+                </div>
+                <div class="pillar" id="dayPillar">
+                    <div class="pillar-label">日柱 (元神)</div>
+                    <div class="ten-god">日主</div>
+                    <div class="character stem" id="dayStem">-</div>
+                    <div class="character branch" id="dayBranch">-</div>
+                    <div class="hidden-stems" id="dayHidden">-</div>
+                    <div class="ten-god" id="dayBranchTenGod">-</div>
+                </div>
+                <div class="pillar" id="hourPillar">
+                    <div class="pillar-label">時柱</div>
+                    <div class="ten-god" id="hourStemTenGod">-</div>
+                    <div class="character stem" id="hourStem">-</div>
+                    <div class="character branch" id="hourBranch">-</div>
+                    <div class="hidden-stems" id="hourHidden">-</div>
+                    <div class="ten-god" id="hourBranchTenGod">-</div>
+                </div>
+            </div>
+
+            <div class="analysis-grid">
+                <div class="analysis-card">
+                    <h2 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        命理詳細解讀
+                    </h2>
+                    <div id="interpretationContent" class="text-secondary">
+                        <p>請等待AI載入解讀內容...</p>
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <div class="card-tabs">
+                        <button class="card-tab active" onclick="switchCardTab('element')">五行強弱</button>
+                        <button class="card-tab" onclick="switchCardTab('luck')">大運流年</button>
+                    </div>
+                    
+                    <div id="elementView">
+                        <canvas id="elementChart"></canvas>
+                    </div>
+
+                    <div id="luckView" style="display: none;">
+                        <div class="luck-ctrl">
+                            <div class="luck-selector">
+                                <label>選擇大運：</label>
+                                <div id="dayunList" class="horizontal-scroll"></div>
+                            </div>
+                            <div class="luck-selector">
+                                <label>選擇流年：</label>
+                                <div id="liunianList" class="horizontal-scroll"></div>
+                            </div>
+                            <div class="luck-selector">
+                                <label>選擇流月：</label>
+                                <div id="liuyueList" class="horizontal-scroll"></div>
+                            </div>
+                        </div>
+                        <div id="luckAnalysisResult" class="luck-result-box">
+                            <!-- 動態載入運勢對應 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
