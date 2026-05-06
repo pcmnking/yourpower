@@ -217,8 +217,13 @@ input:focus, select:focus {
 /* Interpretation Panels */
 .analysis-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr;
     gap: 2rem;
+}
+
+#elementView {
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 .analysis-card {
@@ -397,9 +402,17 @@ ul {
     font-weight: 800;
 }
 
-.luck-item span {
+.luck-item span:not(.ten-god) {
+    display: inline-block;
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin: 0 1px;
+}
+
+.luck-item span:last-child {
     display: block;
     font-size: 0.75rem;
+    font-weight: 400;
     opacity: 0.8;
 }
 
@@ -441,4 +454,149 @@ ul {
 
 .success {
     color: #10b981 !important; /* 翠綠色 - 合 */
+}
+
+/* Draggable Floating Window Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 0; /* No backdrop */
+    height: 0;
+}
+
+.modal-content {
+    position: fixed;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(30, 41, 59, 0.85); /* More transparent */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    padding: 0; /* Remove padding to handle header separately */
+    width: 90%;
+    max-width: 450px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    cursor: default;
+    overflow: hidden;
+}
+
+.modal-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem 1.5rem;
+    cursor: move; /* Indicate draggable */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.modal-title {
+    color: var(--primary-gold);
+    margin: 0;
+    font-size: 1.2rem;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.close-btn {
+    position: static;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    max-height: 60vh;
+    overflow-y: auto;
+    font-size: 0.95rem;
+    white-space: pre-wrap; /* Support newlines */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Make Ten Gods clickable */
+.ten-god {
+    cursor: pointer;
+    text-decoration: underline dotted transparent;
+    transition: all 0.2s;
+}
+
+.ten-god:hover {
+    color: var(--primary-gold) !important;
+    text-decoration-color: var(--primary-gold);
+}
+/* Diagrams Styles - Extra Large */
+.diagrams-wrapper {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    flex-wrap: wrap; 
+    width: 100%;
+}
+
+.diagram-box {
+    flex: 0 0 850px; /* 固定寬度 850px */
+    height: 850px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 48px;
+    padding: 3rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: inset 0 0 40px rgba(255,255,255,0.03), 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.diagram-box::before {
+    content: attr(data-title);
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem; /* 標題加大 */
+    font-weight: 800;
+    color: var(--primary-gold);
+    letter-spacing: 0.3em;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+.diagram-svg {
+    width: 100%;
+    height: 100%;
+    margin-top: 2rem;
+}
+
+.diagram-node {
+    font-size: 36px; /* 大字加倍 */
+    font-weight: 800;
+    fill: var(--text-primary);
+    text-anchor: middle;
+}
+
+.diagram-arrow {
+    stroke-width: 4; /* 微調粗度，讓箭頭看起來更精緻 */
+    fill: none;
+    marker-end: url(#arrowhead);
+}
+
+.arrow-produce { stroke: var(--color-wood); stroke-dasharray: 12; opacity: 0.8; }
+.arrow-control { stroke: var(--color-fire); opacity: 0.7; }
+
+.diagrams-container::-webkit-scrollbar {
+    height: 8px;
+}
+.diagrams-container::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 10px;
 }

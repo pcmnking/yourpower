@@ -82,6 +82,13 @@
         </section>
 
         <main id="resultSection" style="display: none;">
+            <!-- 操作工具列 -->
+            <div class="action-bar" style="margin-bottom: 2rem; display: flex; justify-content: flex-end;">
+                <button class="btn-primary" id="copyAIBtn" onclick="copyDataForAI()" style="box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);">
+                    📋 複製 AI 解盤參數 (Gemini 專用)
+                </button>
+            </div>
+
             <div class="bazi-chart">
                 <div class="pillar" id="yearPillar">
                     <div class="pillar-label">年柱</div>
@@ -118,6 +125,7 @@
             </div>
 
             <div class="analysis-grid">
+                <!-- 1. 命理詳細解讀 -->
                 <div class="analysis-card">
                     <h2 class="card-title">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -131,17 +139,38 @@
                     </div>
                 </div>
 
+                <!-- 2. 五行強弱 -->
                 <div class="analysis-card">
-                    <div class="card-tabs">
-                        <button class="card-tab active" onclick="switchCardTab('element')">五行強弱</button>
-                        <button class="card-tab" onclick="switchCardTab('luck')">大運流年</button>
-                    </div>
-
+                    <h2 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                        五行與十神關係
+                    </h2>
                     <div id="elementView">
-                        <canvas id="elementChart"></canvas>
-                    </div>
+                        <!-- 大型關係圖並排容器 -->
+                        <div class="diagrams-wrapper">
+                            <div id="fiveElementsDiagram" class="diagram-box"></div>
+                            <div id="tenGodsDiagram" class="diagram-box"></div>
+                        </div>
 
-                    <div id="luckView" style="display: none;">
+                        <div id="xiYongShenContent" style="margin-top: 2rem;">
+                            <p style="text-align:center; opacity:0.5;">正在進行五行推演...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. 大運流年 -->
+                <div class="analysis-card">
+                    <h2 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        大運流年
+                    </h2>
+                    <div id="luckView">
                         <div class="luck-ctrl">
                             <div class="luck-selector">
                                 <label>選擇大運：</label>
@@ -163,6 +192,19 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- 十神詳解彈窗 -->
+    <div id="tenGodModal" class="modal">
+        <div class="modal-content" id="draggableModal">
+            <div class="modal-header" id="modalHeader">
+                <h2 id="modalTitle" class="modal-title">十神詳解</h2>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="modalBody" class="modal-body">
+                <!-- 內容動態載入 -->
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>
